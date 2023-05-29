@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/05/26 16:31:30 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/05/29 16:06:35 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,21 @@ typedef struct s_token {
 
 /* 1) LEXER i.e tokenisation de l'input */
 
-t_token			*create_list_token(void);
+t_token			*create_list(void);
 
 t_token			*create_token(t_token_type type, char *value);
 
+void			push_to_list(t_token **lst, t_token *new);
+
 t_token_type	get_token(char *input);
 
-t_token			**lexer(char *input);
+void			lexer(t_token **lst, char *input);
+
+int				is_delimiter(char c, char *delimiter);
+
+void			ft_strncpy(char *value, char *input, int len);
+
+void			free_list(t_token **lst);
 
 /* 2) PARSING i.e traitement syntaxique de l'input */
 

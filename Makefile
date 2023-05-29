@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/05/25 14:27:08 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/05/29 12:52:30 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ RM_RF =			rm -rf
 SRC_DIR = 		./src
 
 SRCS = 			$(SRC_DIR)/main.c \
+				$(SRC_DIR)/lexer.c
 
 LIBFTDIR = 		./libft
 
