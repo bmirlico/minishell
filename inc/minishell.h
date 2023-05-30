@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/05/29 16:06:35 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/05/30 13:30:22 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../libft/inc/libft.h"
 # include "../libft/inc/get_next_line_bonus.h"
 # include "../libft/inc/ft_printf.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define DELIMITER " "
 
@@ -54,6 +56,8 @@ int				is_delimiter(char c, char *delimiter);
 void			ft_strncpy(char *value, char *input, int len);
 
 void			free_list(t_token **lst);
+
+void			display_list(t_token **lst);
 
 /* 2) PARSING i.e traitement syntaxique de l'input */
 

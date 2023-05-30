@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/05/29 12:52:30 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/05/30 11:45:57 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,13 +27,16 @@ RM_RF =			rm -rf
 SRC_DIR = 		./src
 
 SRCS = 			$(SRC_DIR)/main.c \
-				$(SRC_DIR)/lexer.c
+				$(SRC_DIR)/lexer_1.c \
+				$(SRC_DIR)/lexer_2.c
 
 LIBFTDIR = 		./libft
 
 LIBFT =			$(LIBFTDIR)/libft.a
 
 LIBFT_FLAGS = 	-L$(LIBFTDIR) -lft
+
+LREADLINE_FLAGS = -lreadline
 
 ## OBJECTS
 
@@ -57,7 +60,7 @@ INC_HD =		-I $(HDIR) -I $(LIBFTDIR)/inc
 all:			$(NAME)
 
 $(NAME):		$(LIBFT) $(OBJS)
-				$(CC) $(CFLAGS) $(INC_HD) $(OBJS) $(LIBFT_FLAGS) -o $@
+				$(CC) $(CFLAGS) $(INC_HD) $(OBJS) $(LIBFT_FLAGS) $(LREADLINE_FLAGS) -o $@
 
 $(OBJS):		$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(HD)
 				mkdir -p $(OBJ_DIR)
