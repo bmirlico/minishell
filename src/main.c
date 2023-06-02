@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/05/30 13:28:23 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:36:09 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	display_list(t_token **lst)
 	tmp = *lst;
 	while (tmp != NULL)
 	{
-		ft_printf("Type: %d ; Value: %s\n", tmp->type,
+		ft_printf("Type: %d ; Value: %c\n", tmp->type,
 			tmp->value);
 		tmp = tmp->next;
 	}
@@ -28,7 +28,7 @@ void	display_list(t_token **lst)
 // main du projet minishell
 int	main(int ac, char **av)
 {
-	char	*g_commands;
+	char	*input;
 	t_token	*lst;
 
 	(void)av;
@@ -37,16 +37,19 @@ int	main(int ac, char **av)
 	while (1)
 	{
 		lst = create_list();
-		g_commands = readline("minishell> ");
-		if (!ft_strncmp(g_commands, "STOP", ft_strlen(g_commands)))
+		input = readline("minishell> ");
+		if (check_syntax(input) == 0)
 		{
-			free(g_commands);
-			exit (0);
+			if (!ft_strncmp(input, "stop", ft_strlen(input)))
+			{
+				free(input);
+				exit (0);
+			}
+			lexer_char(&lst, input);
+			display_list(&lst);
+			free_list(&lst);
 		}
-		lexer(&lst, g_commands);
-		display_list(&lst);
-		free_list(&lst);
-		free(g_commands);
+		free(input);
 	}
 	return (0);
 }
