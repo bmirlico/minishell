@@ -6,20 +6,20 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 12:48:22 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/02 14:35:09 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/12 14:48:02 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// cree une nouvelle liste
-t_token	*create_list(void)
+// cree une nouvelle liste du lexer
+t_token	*create_list_lexer(void)
 {
 	return (NULL);
 }
 
-// fonction qui cree un element t_token avec un type et une valeur
-// pb a comprendre pk le strdup(value) ne fonctionne pas qd j'utilise readline
+// fonction qui cree un element t_token avec un type et une valeur en char
+// et une str en char *
 t_token	*create_token(t_token_type type, char c, char *str)
 {
 	t_token	*new_token;
@@ -34,7 +34,7 @@ t_token	*create_token(t_token_type type, char c, char *str)
 	return (new_token);
 }
 
-// ajoute un nouvel element a une liste chainee
+// ajoute un nouvel element a une liste chainee t_token
 void	push_to_list(t_token **lst, t_token *new)
 {
 	t_token	*tmp;
@@ -50,8 +50,8 @@ void	push_to_list(t_token **lst, t_token *new)
 	}
 }
 
-// fonction qui free la liste du lexer
-void	free_list(t_token **lst)
+// fonction qui free la liste du lexer_char
+void	free_lexer_char(t_token **lst)
 {
 	t_token	*tmp;
 
@@ -59,6 +59,21 @@ void	free_list(t_token **lst)
 	while (*lst != NULL)
 	{
 		tmp = (*lst)->next;
+		free(*lst);
+		*lst = tmp;
+	}
+}
+
+// fonction qui free la liste du lexer_str
+void	free_lexer_str(t_token **lst)
+{
+	t_token	*tmp;
+
+	tmp = *lst;
+	while (*lst != NULL)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->str);
 		free(*lst);
 		*lst = tmp;
 	}
