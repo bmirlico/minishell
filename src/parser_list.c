@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:46:08 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/12 15:16:59 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:50:28 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ void	free_parser(t_command **cmds)
 	{
 		tmp = (*cmds)->next;
 		free_tab((*cmds)->cmd_args);
-		free_lexer_str(&((*cmds)->redirections));
+		free_lexer_char(&((*cmds)->redirections));
 		free(*cmds);
 		*cmds = tmp;
 	}
 }
 
 // fonction qui free la liste du lexer_char, la liste du lexer_str
+// et la liste du parser
 void	free_lists(t_token **lst, t_token **lst_j, t_command **cmds)
 {
 	free_lexer_char(lst);

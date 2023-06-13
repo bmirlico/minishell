@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/12 14:47:46 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:44:50 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ typedef struct s_command {
 
 // main.c
 
-void			display_list(t_token **lst);
-
-void			display_lists(t_token **lst, t_token **lst_j);
-
 void			minishell(char *input, t_token **lst, t_token **lst_j,
 					t_command **cmds);
+
+void			display_parser(t_command **lst);
+
+void			display_lexer(t_token **lst);
+
+void			display_lexers(t_token **lst, t_token **lst_j);
 
 /* 0-bis) PRE-PARSING i.e gestion d'erreurs et caracteres speciaux */
 
@@ -79,21 +81,31 @@ int				find_chars(char *input);
 
 /* 1) LEXER i.e tokenisation de l'input */
 
-// lexer.c
+// lexer_1.c
 
 void			lexer_str(t_token **lst, t_token **lst_j);
 
-void			lexer_char(t_token **lst, char *input);
+void			group_str(t_token **tmp, t_token **lst_j, char *join);
+
+void			group_redirs(t_token **tmp, t_token **lst_j, char *join);
+
+void			add_char_to_str(t_token **tmp, t_token **lst_j, char *join);
+
+void			tokenize_remaining(t_token **lst_j);
+
+// lexer_2.c
 
 void			ft_join_free(char **join, char c);
 
 char			*char_to_str(char c);
 
-void			tokenize_remaining(t_token **lst_j);
+void			lexer_char(t_token **lst, char *input);
 
 char			get_token_value(char *input);
 
 t_token_type	get_token_type(char c);
+
+// utils.c
 
 int				is_delimiter(char c, char *delimiter);
 
@@ -113,11 +125,24 @@ void			free_lexer_str(t_token **lst);
 
 /* 2) PARSING i.e traitement syntaxique de l'input */
 
-// parser.c
+// parser_1.c
 
 void			parser(t_token **lst_j, t_command **cmds);
 
+void			add_redirs(t_token **tmp, t_token **redirs);
+
+void			add_command_to_tab(t_token **tmp, char ***tab);
+
+void			add_command_to_list(t_token **tmp, t_token **redirs,
+					char ***tab, t_command **cmds);
+
 void			fill_tab_free(char ***tab, char *str);
+
+// parser_2.c
+
+void			fill_in_tmp(char **dest, char **src, int len);
+
+void			free_previous_str(char **tab, int i);
 
 int				get_len_tab(char **tab);
 
