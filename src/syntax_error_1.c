@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 12:35:20 by clbernar          #+#    #+#             */
-/*   Updated: 2023/06/14 11:46:54 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/14 12:14:29 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	check_empty_redirection(char *input)
 	rdir = CLOSED;
 	i = 0;
 	quote_state = CLOSED;
-	while (input[i] != '\0')
+	while (input[i++] != '\0')
 	{
 		quote_state = quotes_state(input[i], quote_state);
 		if (quote_state == CLOSED && rdir == SINGLE_OPEN && (input[i] == '|'
@@ -51,10 +51,12 @@ int	check_empty_redirection(char *input)
 			return (0);
 		if (quote_state == CLOSED && ((input[i]) == '<' || (input[i]) == '>'))
 			rdir = SINGLE_OPEN;
+		if (quote_state == CLOSED && ((input[i]) == '<' || (input[i]) == '>')
+			&& ((input[i + 1]) == '<' || (input[i + 1]) == '>'))
+			i++;
 		else if (quote_state == CLOSED && rdir == SINGLE_OPEN
 			&& ft_isprint(input[i]) == 1 && input[i] != ' ')
 			rdir = CLOSED;
-		i++;
 	}
 	if (rdir != CLOSED)
 		return (0);
