@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 17:45:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:27:13 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/13 19:04:23 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ void	fill_tab_free(char ***tab, char *str)
 	}
 	ft_strncpy(tmp[i], str, len);
 	tmp[++i] = NULL;
+	free(*tab);
 	*tab = tmp;
 }

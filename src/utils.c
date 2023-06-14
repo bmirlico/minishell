@@ -6,11 +6,49 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 16:42:44 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:43:28 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/14 11:40:16 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+// fonction qui indique si le caractere donne est
+// un caractere special
+int	is_special_char(char c)
+{
+	int	i;
+
+	i = 0;
+	while (SPECIAL_CHAR[i] != '\0')
+	{
+		if (SPECIAL_CHAR[i] == c)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+// Cette fonction permet garder un etat d'ouverture ou de
+// fermeture des quotes pour pouvoir interpreter ou non
+// certains caracteres
+int	quotes_state(char c, int prev_state)
+{
+	if (c == '\'')
+	{
+		if (prev_state == SINGLE_OPEN)
+			return (CLOSED);
+		else if (prev_state == CLOSED)
+			return (SINGLE_OPEN);
+	}
+	else if (c == '\"')
+	{
+		if (prev_state == DOUBLE_OPEN)
+			return (CLOSED);
+		else if (prev_state == CLOSED)
+			return (DOUBLE_OPEN);
+	}
+	return (prev_state);
+}
 
 // fonction qui indique si le caractere donne est un delimiteur ou non
 // fonction NON UTILISEE pour le moment

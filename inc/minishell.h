@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:44:50 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/14 11:56:23 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 # include <readline/history.h>
 
 # define DELIMITER " "
-# define SPECIAL_CHARS ";\\"
+# define SPECIAL_CHAR "#&~*`();\\"
+# define SINGLE_OPEN 1
+# define DOUBLE_OPEN 2
+# define CLOSED 3
 
 typedef enum s_token_type {
 	T_SPACE, // 0
@@ -52,10 +55,9 @@ typedef struct s_command {
 
 /* 0) MAIN */
 
-// main.c
+// main.c @Bastien
 
-void			minishell(char *input, t_token **lst, t_token **lst_j,
-					t_command **cmds);
+void			minishell(char *input);
 
 void			display_parser(t_command **lst);
 
@@ -65,23 +67,37 @@ void			display_lexers(t_token **lst, t_token **lst_j);
 
 /* 0-bis) PRE-PARSING i.e gestion d'erreurs et caracteres speciaux */
 
-// syntax_error.c
+// syntax_error_1.c @Clement
 
 int				check_syntax(char *input);
 
-int				check_unclosed_quotes(char *input);
+int				check_pipe_error(char *input);
 
-int				check_special_chars(char *input);
+int				check_empty_and_double_pipe(char *input);
 
-int				check_pipe_and_redir(char *input);
+int				check_redirections(char *input);
 
-int				get_num_quotes(char *input, int c);
+int				check_empty_redirection(char *input);
 
-int				find_chars(char *input);
+// syntax_error_2.c @Clement
+
+int				check_special_char(char *input);
+
+int				check_bad_env_variable(char *input);
+
+// utils.c @Bastien @Clement
+
+int				is_special_char(char c);
+
+int				quotes_state(char c, int prev_state);
+
+int				is_delimiter(char c, char *delimiter);
+
+void			ft_strncpy(char *value, char *input, int len);
 
 /* 1) LEXER i.e tokenisation de l'input */
 
-// lexer_1.c
+// lexer_1.c @Bastien
 
 void			lexer_str(t_token **lst, t_token **lst_j);
 
@@ -93,7 +109,7 @@ void			add_char_to_str(t_token **tmp, t_token **lst_j, char *join);
 
 void			tokenize_remaining(t_token **lst_j);
 
-// lexer_2.c
+// lexer_2.c @Bastien
 
 void			ft_join_free(char **join, char c);
 
@@ -105,13 +121,7 @@ char			get_token_value(char *input);
 
 t_token_type	get_token_type(char c);
 
-// utils.c
-
-int				is_delimiter(char c, char *delimiter);
-
-void			ft_strncpy(char *value, char *input, int len);
-
-// lexer_list.c
+// lexer_list.c @Bastien
 
 t_token			*create_list_lexer(void);
 
@@ -125,7 +135,7 @@ void			free_lexer_str(t_token **lst);
 
 /* 2) PARSING i.e traitement syntaxique de l'input */
 
-// parser_1.c
+// parser_1.c @Bastien
 
 void			parser(t_token **lst_j, t_command **cmds);
 
@@ -138,7 +148,7 @@ void			add_command_to_list(t_token **tmp, t_token **redirs,
 
 void			fill_tab_free(char ***tab, char *str);
 
-// parser_2.c
+// parser_2.c @Bastien
 
 void			fill_in_tmp(char **dest, char **src, int len);
 
@@ -148,7 +158,7 @@ int				get_len_tab(char **tab);
 
 void			free_tab(char **tab);
 
-// parser_list.c
+// parser_list.c @Bastien
 
 t_command		*create_list_parser(void);
 

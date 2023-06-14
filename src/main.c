@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:54:33 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/14 11:57:25 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,42 @@
 int	main(int ac, char **av)
 {
 	char		*input;
-	t_token		*lst;
-	t_token		*lst_j;
-	t_command	*cmds;
 
 	(void)av;
 	if (ac > 1)
 		return (ft_printf("No arguments required to launch the shell.\n"), 1);
 	while (1)
 	{
-		lst = create_list_lexer();
-		lst_j = create_list_lexer();
-		cmds = create_list_parser();
-		input = readline("minishell> ");
-		minishell(input, &lst, &lst_j, &cmds);
+		input = readline("minishell$ ");
+		minishell(input);
+		free(input);
 	}
 	return (0);
 }
 
 // fonction minishell qui cree tokenise l'input et cree les listes
-void	minishell(char *input, t_token **lst, t_token **lst_j, t_command **cmds)
+void	minishell(char *input)
 {
-	if (check_syntax(input) == 0)
+	t_token		*lst;
+	t_token		*lst_j;
+	t_command	*cmds;
+
+	lst = create_list_lexer();
+	lst_j = create_list_lexer();
+	cmds = create_list_parser();
+	if (check_syntax(input) == 1)
 	{
 		if (!ft_strncmp(input, "stop", ft_strlen(input) + 1))
 		{
 			free(input);
 			exit (0);
 		}
-		lexer_char(lst, input);
-		lexer_str(lst, lst_j);
-		parser(lst_j, cmds);
-		display_parser(cmds);
-		free_lists(lst, lst_j, cmds);
+		lexer_char(&lst, input);
+		lexer_str(&lst, &lst_j);
+		parser(&lst_j, &cmds);
+		display_parser(&cmds);
+		free_lists(&lst, &lst_j, &cmds);
 	}
-	free(input);
 }
 
 // fonction qui affiche les elements du la liste du parser a savoir
