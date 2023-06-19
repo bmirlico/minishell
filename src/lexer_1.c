@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:43:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:56:34 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:21:53 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ void	lexer_str(t_token **lst, t_token **lst_j)
 	while (tmp != NULL)
 	{
 		join = NULL;
-		if (tmp->type == T_CMD)
+		if (tmp->type == T_SINGLEQ || tmp->type == T_DOUBLEQ)
+			group_quotes(&tmp, lst_j, join);
+		else if (tmp->type == T_CMD)
 			group_str(&tmp, lst_j, join);
 		else if ((tmp->type == T_LR && tmp->next->type == T_LR)
 			|| (tmp->type == T_RR && tmp->next->type == T_RR))
@@ -35,6 +37,27 @@ void	lexer_str(t_token **lst, t_token **lst_j)
 			add_char_to_str(&tmp, lst_j, join);
 	}
 	tokenize_remaining(lst_j);
+}
+
+// fonction qui regroupe tout ce qu'il y a entre single ou double quote
+// comme un mot de type T_CMD 
+void	group_quotes(t_token **tmp, t_token **lst_j, char *join)
+{
+	t_token_type	limit;
+	t_token			*new;
+
+	limit = (*tmp)->type;
+	ft_join_free(&join, (*tmp)->value);
+	*tmp = (*tmp)->next;
+	while ((*tmp)->type != limit)
+	{
+		ft_join_free(&join, (*tmp)->value);
+		*tmp = (*tmp)->next;
+	}
+	ft_join_free(&join, (*tmp)->value);
+	*tmp = (*tmp)->next;
+	new = create_token(T_CMD, '\0', join);
+	push_to_list(lst_j, new);
 }
 
 // fonction qui va regrouper les characteres du meme type (T_CMD) et
@@ -79,25 +102,4 @@ void	add_char_to_str(t_token **tmp, t_token **lst_j, char *join)
 	new = create_token((*tmp)->type, '\0', join);
 	push_to_list(lst_j, new);
 	*tmp = (*tmp)->next;
-}
-
-// fonction qui, une fois l'input tokenise, repasse sur la liste
-// et donne les bons types aux elements apres les redirectons
-void	tokenize_remaining(t_token **lst_j)
-{
-	t_token	*tmp;
-
-	tmp = *lst_j;
-	while (tmp != NULL)
-	{
-		if (tmp->type == T_LR && tmp->next->type == T_CMD)
-			tmp->next->type = T_INFILE;
-		else if (tmp->type == T_RR && tmp->next->type == T_CMD)
-			tmp->next->type = T_OUTFILE;
-		else if (tmp->type == T_HEREDOC && tmp->next->type == T_CMD)
-			tmp->next->type = T_LIMITOR;
-		else if (tmp->type == T_APPEND && tmp->next->type == T_CMD)
-			tmp->next->type = T_OUTFILE_APPEND;
-		tmp = tmp->next;
-	}
 }

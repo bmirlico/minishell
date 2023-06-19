@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/14 11:56:23 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:23:45 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef enum s_token_type {
 	T_LIMITOR, // 8
 	T_OUTFILE, // 9
 	T_OUTFILE_APPEND, // 10
+	T_SINGLEQ,
+	T_DOUBLEQ,
 	T_EOF, // 11
 }	t_token_type;
 
@@ -101,15 +103,17 @@ void			ft_strncpy(char *value, char *input, int len);
 
 void			lexer_str(t_token **lst, t_token **lst_j);
 
+void			group_quotes(t_token **tmp, t_token **lst_j, char *join);
+
 void			group_str(t_token **tmp, t_token **lst_j, char *join);
 
 void			group_redirs(t_token **tmp, t_token **lst_j, char *join);
 
 void			add_char_to_str(t_token **tmp, t_token **lst_j, char *join);
 
-void			tokenize_remaining(t_token **lst_j);
-
 // lexer_2.c @Bastien
+
+void			tokenize_remaining(t_token **lst_j);
 
 void			ft_join_free(char **join, char c);
 
@@ -118,6 +122,8 @@ char			*char_to_str(char c);
 void			lexer_char(t_token **lst, char *input);
 
 char			get_token_value(char *input);
+
+// lexer_3.c @Bastien
 
 t_token_type	get_token_type(char c);
 

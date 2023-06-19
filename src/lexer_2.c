@@ -6,11 +6,32 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 16:45:08 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 16:53:17 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:22:34 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+// fonction qui, une fois l'input tokenise, repasse sur la liste
+// et donne les bons types aux elements apres les redirectons
+void	tokenize_remaining(t_token **lst_j)
+{
+	t_token	*tmp;
+
+	tmp = *lst_j;
+	while (tmp != NULL)
+	{
+		if (tmp->type == T_LR && tmp->next->type == T_CMD)
+			tmp->next->type = T_INFILE;
+		else if (tmp->type == T_RR && tmp->next->type == T_CMD)
+			tmp->next->type = T_OUTFILE;
+		else if (tmp->type == T_HEREDOC && tmp->next->type == T_CMD)
+			tmp->next->type = T_LIMITOR;
+		else if (tmp->type == T_APPEND && tmp->next->type == T_CMD)
+			tmp->next->type = T_OUTFILE_APPEND;
+		tmp = tmp->next;
+	}
+}
 
 // fonction qui groupe caractere par caractere pour former une
 // string, et free bien la chaine d'avant
@@ -90,19 +111,4 @@ char	get_token_value(char *input)
 		return ('\0');
 	c = *next++;
 	return (c);
-}
-
-// fonction qui renvoie le type de token associe a un char
-t_token_type	get_token_type(char c)
-{
-	if (c == '|')
-		return (T_PIPE);
-	else if (c == '<')
-		return (T_LR);
-	else if (c == '>')
-		return (T_RR);
-	else if (c == ' ' || c == '\t')
-		return (T_SPACE);
-	else
-		return (T_CMD);
 }
