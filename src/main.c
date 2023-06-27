@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/19 16:58:33 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/21 12:04:58 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	minishell(char *input)
 		lexer_char(&lst, input);
 		lexer_str(&lst, &lst_j);
 		parser(&lst_j, &cmds);
-		display_parser(&cmds);
+		execution(&cmds);
 		free_lists(&lst, &lst_j, &cmds);
 	}
 }

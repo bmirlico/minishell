@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 16:19:04 by clbernar          #+#    #+#             */
-/*   Updated: 2023/06/14 11:47:07 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/21 12:12:34 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,3 +69,10 @@ int	check_bad_env_variable(char *input)
 	return (1);
 }
 
+int	check_rdir(int rdir)
+{
+	if (rdir != CLOSED)
+		return (0);
+	else
+		return (1);
+}

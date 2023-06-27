@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/06/19 17:07:52 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/06/27 15:06:25 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,10 @@ SRCS = 			$(SRC_DIR)/main.c \
 				$(SRC_DIR)/syntax_error_2.c \
 				$(SRC_DIR)/parser_1.c \
 				$(SRC_DIR)/parser_2.c \
-				$(SRC_DIR)/parser_list.c
+				$(SRC_DIR)/parser_list.c \
+				$(SRC_DIR)/exec_1.c \
+				$(SRC_DIR)/exec_2.c \
+				$(SRC_DIR)/exec_3.c \
 
 LIBFTDIR = 		./libft
 

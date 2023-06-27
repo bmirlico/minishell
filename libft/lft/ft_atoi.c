@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:43:27 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/05/17 18:12:43 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/26 14:19:41 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	ft_atoi(const char *nptr)
 	i = 0;
 	sign = 1;
 	res = 0;
+	if (!nptr)
+		return (res * sign);
 	while (nptr[i] == 32 || (nptr[i] >= 9 && nptr[i] <= 13))
 		i++;
 	if (nptr[i] == '+' || nptr[i] == '-')

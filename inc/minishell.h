@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/19 17:23:45 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:06:12 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include "../libft/inc/ft_printf.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <limits.h>
+# include <errno.h>
 
 # define DELIMITER " "
 # define SPECIAL_CHAR "#&~*`();\\"
@@ -86,6 +88,8 @@ int				check_empty_redirection(char *input);
 int				check_special_char(char *input);
 
 int				check_bad_env_variable(char *input);
+
+int				check_rdir(int rdir);
 
 // utils.c @Bastien @Clement
 
@@ -175,5 +179,45 @@ void			push_to_parser(t_command **lst, t_command *new);
 void			free_parser(t_command **cmds);
 
 void			free_lists(t_token **lst, t_token **lst_j, t_command **cmds);
+
+/* 3) EXPAND i.e traitement des variables d'env */
+
+/* 4) EXECUTION i.e execution des commandes et des builtins */
+// echo, cd, pwd, export, unset, env, exit
+
+// exec_1.c @Bastien
+
+void			execution(t_command **cmds);
+
+int				is_builtin(char *cmd);
+
+void			exec_builtin(t_command *tmp);
+
+void			built_in_cd(t_command *tmp);
+
+void			built_in_pwd(void);
+
+// exec_2.c @Bastien
+
+void			built_in_exit(t_command *tmp);
+
+void			conditions_exit(t_command *tmp, long long exit_code,
+					char *error_str, int len_tab);
+
+int				is_numeric(char *str);
+
+void			exit_non_numeric(char **error, char *str);
+
+int				is_out_of_range(long long exit_code, char *str);
+
+// exec_3.c @Bastien
+
+long long		ft_strtoll(const char *nptr);
+
+void			init_strtoll(int *i, int *sign, long long *res, int *digit);
+
+void			check_sign(char c, int *i, int *sign);
+
+void			handle_bounds(int *sign, long long *res);
 
 #endif
