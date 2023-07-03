@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:46:08 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 19:01:10 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:26:25 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	free_parser(t_command **cmds)
 	{
 		tmp = (*cmds)->next;
 		free_tab((*cmds)->cmd_args);
-		free_lexer_char(&((*cmds)->redirections));
+		free_lexer_str(&((*cmds)->redirections));
 		free(*cmds);
 		*cmds = tmp;
 	}

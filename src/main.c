@@ -6,15 +6,14 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/21 12:04:58 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:34:59 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 // VALGRIND
-// --track-fds=yes --leak-check=full --show-leak-kinds=all ./minishell
-// --suppressions=ignore_readline_leaks.supp
+// --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline_leaks.supp ./minishell
 
 // Ex. commande : ls > outfile -l -a | wc -l > test | cat
 
@@ -47,6 +46,7 @@ void	minishell(char *input)
 	cmds = create_list_parser();
 	if (check_syntax(input) == 1)
 	{
+		add_history(input);
 		if (!ft_strncmp(input, "stop", ft_strlen(input) + 1))
 		{
 			free(input);
@@ -55,6 +55,8 @@ void	minishell(char *input)
 		lexer_char(&lst, input);
 		lexer_str(&lst, &lst_j);
 		parser(&lst_j, &cmds);
+		expand(&cmds);
+		display_parser(&cmds);
 		execution(&cmds);
 		free_lists(&lst, &lst_j, &cmds);
 	}

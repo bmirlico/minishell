@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/27 15:06:12 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:32:26 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ int				check_empty_redirection(char *input);
 int				check_special_char(char *input);
 
 int				check_bad_env_variable(char *input);
+
+int				check_last_exitcode_case(char *input, int index);
 
 int				check_rdir(int rdir);
 
@@ -181,6 +183,66 @@ void			free_parser(t_command **cmds);
 void			free_lists(t_token **lst, t_token **lst_j, t_command **cmds);
 
 /* 3) EXPAND i.e traitement des variables d'env */
+
+// var_env_state.c @Clement
+
+int				var_env_state(char *str, int i, int var_env_state, int q_state);
+
+int				var_env_declaration(char *str, int i, int quote_state);
+
+int				end_var_env_declaration(char *str, int i);
+
+int				is_closing_scope(char *str, int index);
+
+// expand_substitution.c @Clement
+
+int				to_be_modified(char *str);
+
+int				nb_quotes(char *str);
+
+void			new_str(char *str, char *new);
+
+int				var_env_copy(char *str, int index, char *new, int dest);
+
+// get_expand_info @Clement
+
+int				get_varname_len(char *str);
+
+int				get_varenv_value_len(char *str);
+
+int				get_varenv_len(char *str, int i);
+
+int				get_var_env_end(char *str, int i);
+
+int				get_nb_empty(char **tab);
+
+// clean_post_expand.c @Clement
+
+void			clean_lst(t_command *cmds);
+
+char			**replace_tab(char **tab, int new_len);
+
+// expand.c @Clement
+
+void			expand(t_command **cmds);
+
+void			expand_tab(char **tab);
+
+void			expand_str_tab(char **tab, int i);
+
+void			expand_rdir(t_token	*redirections);
+
+void			expand_rdir_lst(t_token *rdir);
+
+// remove_quote.c @Clement
+
+void			remove_quotes_rdir(t_token	*redirections);
+
+void			quote_removing_rdir(t_token *rdir, int quotes);
+
+void			remove_quotes_tab(char **tab);
+
+void			quote_removing_tab(char **tab, int index, int quotes);
 
 /* 4) EXECUTION i.e execution des commandes et des builtins */
 // echo, cd, pwd, export, unset, env, exit

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: clbernar <clbernar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 12:35:20 by clbernar          #+#    #+#             */
-/*   Updated: 2023/06/21 12:12:04 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 13:56:17 by clbernar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	check_syntax(char *input)
 // c'est a dire que qu'il y ait bien des caracteres autres que des
 // espaces apres une redirection jusqu'au prochain pipe ou redirection
 // A DOUCLE CHECK LA GESTION DES QUOTES
+// A ENVOYE POUR MODIF A BASTIEN CETTE FONCTION + check_rdir utilise dans le return
 int	check_empty_redirection(char *input)
 {
 	int	i;
@@ -62,6 +63,7 @@ int	check_empty_redirection(char *input)
 	}
 	return (check_rdir(rdir));
 }
+
 
 // Cette fonction check dans un premier temps les erreurs de syntaxe
 // de pipe du style >< <> <<< >>>
@@ -100,9 +102,7 @@ int	check_redirections(char *input)
 // Et si ce qu'il y a entre 2 pipe est vide ou incorrect  cest a dire
 // 2 pipes qui ne contiennent pas entre l'un et lautre au moins un caractere
 // pouvant correspondre a une commande ou a une cible de redirection
-//(A checker si ya pas dautres carcateres interdit type > direct apres un |)
 // Le tout en prenant en compte les quotes fermees et ouvertes
-//  RAPPEL input[i] != '>' && input[i] != '<' Dans le esle if de ma boucle
 int	check_empty_and_double_pipe(char *input)
 {
 	int	i;
@@ -145,9 +145,9 @@ int	check_pipe_error(char *input)
 	if (input[i] == '|')
 		return (0);
 	i = ft_strlen(input) - 1;
-	while (input[i] == ' ')
+	while (i > 0 && input[i] == ' ')
 		i--;
-	if (input[i] == '|')
+	if (i > 0 && input[i] == '|')
 		return (0);
 	if (check_empty_and_double_pipe(input) == 0)
 		return (0);

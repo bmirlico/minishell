@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:06:57 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/27 15:07:03 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:50:57 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	exec_builtin(t_command *tmp)
 
 // Commande builtin CD
 // Cas non gere : cd - (qui retourne ds le $OLDPWD)
+// ATTENTION a l'env, PWD et OLDPWD a modifier
 void	built_in_cd(t_command *tmp)
 {
 	int		len_tab;

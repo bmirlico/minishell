@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/06/27 15:06:25 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/07/03 15:23:20 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,12 @@ SRCS = 			$(SRC_DIR)/main.c \
 				$(SRC_DIR)/parser_1.c \
 				$(SRC_DIR)/parser_2.c \
 				$(SRC_DIR)/parser_list.c \
+				$(SRC_DIR)/var_env_state.c \
+				$(SRC_DIR)/expand_substitution.c \
+				$(SRC_DIR)/get_expand_info.c \
+				$(SRC_DIR)/expand.c \
+				$(SRC_DIR)/clean_post_expand.c \
+				$(SRC_DIR)/remove_quote.c \
 				$(SRC_DIR)/exec_1.c \
 				$(SRC_DIR)/exec_2.c \
 				$(SRC_DIR)/exec_3.c \

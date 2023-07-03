@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 17:45:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/06/13 19:04:23 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:26:09 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ void	parser(t_token **lst_j, t_command **cmds)
 void	add_redirs(t_token **tmp, t_token **redirs)
 {
 	t_token		*redirs_elem;
+	char		*rdir;
 
-	redirs_elem = create_token((*tmp)->type, (*tmp)->value, (*tmp)->str);
+	rdir = ft_strdup((*tmp)->str);
+	redirs_elem = create_token((*tmp)->type, (*tmp)->value, rdir);
 	push_to_list(redirs, redirs_elem);
 	*tmp = (*tmp)->next;
 }
