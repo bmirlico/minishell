@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/03 15:32:26 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:35:50 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <readline/history.h>
 # include <limits.h>
 # include <errno.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
 
 # define DELIMITER " "
 # define SPECIAL_CHAR "#&~*`();\\"
@@ -48,20 +51,28 @@ typedef struct s_token {
 	t_token_type	type;
 	char			value;
 	char			*str;
+	int				fd;
 	struct s_token	*next;
 }	t_token;
 
 typedef struct s_command {
 	char					**cmd_args;
 	t_token					*redirections;
+	int						index;
 	struct s_command		*next;
 }	t_command;
+
+typedef struct s_pipex {
+	int						nb_pipes;
+	int						nb_cmds;
+	pid_t					**pipefd;
+}	t_pipex;
 
 /* 0) MAIN */
 
 // main.c @Bastien
 
-void			minishell(char *input);
+void			minishell(char *input, char **env);
 
 void			display_parser(t_command **lst);
 
@@ -102,6 +113,8 @@ int				quotes_state(char c, int prev_state);
 int				is_delimiter(char c, char *delimiter);
 
 void			ft_strncpy(char *value, char *input, int len);
+
+int				count_slash(char *str);
 
 /* 1) LEXER i.e tokenisation de l'input */
 
@@ -244,12 +257,108 @@ void			remove_quotes_tab(char **tab);
 
 void			quote_removing_tab(char **tab, int index, int quotes);
 
-/* 4) EXECUTION i.e execution des commandes et des builtins */
-// echo, cd, pwd, export, unset, env, exit
+/* 4) [WIP] EXECUTION i.e execution des commandes */
 
 // exec_1.c @Bastien
 
-void			execution(t_command **cmds);
+void			execution(char *input, t_command **cmds, char **env);
+
+void			pipex(t_command *tmp, t_pipex vars, t_token **rdirs,
+					char **env);
+
+void			child_process(t_command *tmp, t_pipex vars, t_token **rdirs,
+					char **env);
+
+void			parent_process(t_command *tmp, t_pipex vars, pid_t pid);
+
+void			exec_cmd(t_command *tmp, char **env);
+
+// exec_2.c @Bastien
+
+void			handle_exec(char *cmd_p, t_command *tmp, char **env);
+
+void			if_file_unexists(char *cmd_p, char *error, t_command *tmp,
+					char **env);
+
+void			if_file_exists(char *cmd_p, char *error, t_command *tmp,
+					char **env);
+
+
+// pipe_.c @Bastien
+
+pid_t			**init_pipefd(int nb_pipes);
+
+void			init_pipe(t_pipex vars, int j);
+
+void			close_previous_pipe(t_pipex vars, int j);
+
+void			close_pipe(t_pipex vars, int j);
+
+void			free_pipefd(pid_t **pipefd, int nb_pipes);
+
+// pipe_rdirs_1.c @Bastien
+
+void			pipe_redirection(t_pipex vars, t_token **rdirs, int i);
+
+void			pipe_first(t_pipex vars, int i, t_token **rdirs);
+
+void			pipe_last(t_pipex vars, int i, t_token **rdirs);
+
+void			pipe_between(t_pipex vars, int i, t_token **rdirs);
+
+void			pipe_between_infile(t_token *last_infile, t_pipex vars,
+					int i);
+
+// pipe_rdirs_2.c @Bastien
+
+void			pipe_between_outfile(t_token *last_outfile, t_pipex vars,
+					int i);
+
+void			init_last_rdirs(t_token **last_infile, t_token **last_outfile,
+					t_token **rdirs);
+
+t_token			*get_last_infile(t_token **rdirs);
+
+t_token			*get_last_outfile(t_token **rdirs);
+
+
+// rdirs_.c @Bastien
+
+void			open_rdirs(t_token **redirections);
+
+void			handle_errors_rdirs(t_command *tmpc, t_pipex vars,
+					t_token **rdirs);
+
+void			close_pipe_and_free(t_pipex vars, int index);
+
+void			close_rdirs(t_token **redirections);
+
+void			fill_heredoc(t_token *tmp);
+
+// utils_exec_1.c @Bastien
+
+void			init_struct(t_pipex *vars, t_command **cmds, char *input);
+
+void			get_index_cmds(t_command **cmds);
+
+int				get_nb_pipes(char *input);
+
+int				count_slash(char *str);
+
+char			*ft_strjoin3(char *str1, char *str2, char *str3);
+
+// utils_exec_2.c @Bastien
+
+char			*get_path(char **env);
+
+int				is_path_set(char **env);
+
+char			*get_cmd_with_path(char *cmd, char **paths);
+
+/* 5) [WIP] BUILT-INS et des builtins */
+// echo, cd, pwd, export, unset, env, exit
+
+// builtin_1.c @Bastien
 
 int				is_builtin(char *cmd);
 
@@ -259,7 +368,7 @@ void			built_in_cd(t_command *tmp);
 
 void			built_in_pwd(void);
 
-// exec_2.c @Bastien
+// builtin_2.c @Bastien
 
 void			built_in_exit(t_command *tmp);
 
@@ -272,7 +381,7 @@ void			exit_non_numeric(char **error, char *str);
 
 int				is_out_of_range(long long exit_code, char *str);
 
-// exec_3.c @Bastien
+// builtin_3.c @Bastien
 
 long long		ft_strtoll(const char *nptr);
 

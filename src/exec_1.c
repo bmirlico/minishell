@@ -5,88 +5,110 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/21 12:06:57 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/03 15:50:57 by bmirlico         ###   ########.fr       */
+/*   Created: 2023/07/11 12:33:40 by bmirlico          #+#    #+#             */
+/*   Updated: 2023/07/17 23:27:11 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 // fonction d'excution des commandes
-void	execution(t_command **cmds)
+// A quel moment vient le syntax error rdir => hypothèse : ds le child process
+void	execution(char *input, t_command **cmds, char **env)
 {
 	t_command	*tmp;
+	t_pipex		vars;
 
+	if (input == NULL)
+		return ;
 	tmp = *cmds;
+	init_struct(&vars, cmds, input);
 	while (tmp != NULL)
 	{
-		if (tmp->cmd_args != NULL)
+		open_rdirs(&(tmp->redirections));
+		if (vars.nb_pipes == 0 && is_builtin(tmp->cmd_args[0]))
+			exec_builtin(tmp);
+		else if (vars.nb_pipes >= 0)
 		{
-			if (is_builtin(tmp->cmd_args[0]))
-				exec_builtin(tmp);
+			//printf("OK\n");
+			pipex(tmp, vars, &(tmp->redirections), env);
 		}
 		tmp = tmp->next;
 	}
+	free_pipefd(vars.pipefd, vars.nb_pipes);
 }
 
-// fonction qui check si la commande est un builtin ou pas
-int	is_builtin(char *cmd)
+// fonction qui réalise le fork et l'exécution des commandes ds un child process
+void	pipex(t_command *tmp, t_pipex vars, t_token **rdirs, char **env)
 {
-	int	len;
+	pid_t	pid;
 
-	len = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "echo", len + 1) || !ft_strncmp(cmd, "cd", len + 1)
-		|| !ft_strncmp(cmd, "pwd", len + 1)
-		|| !ft_strncmp(cmd, "export", len + 1)
-		|| !ft_strncmp(cmd, "unset", len + 1)
-		|| !ft_strncmp(cmd, "env", len + 1)
-		|| !ft_strncmp(cmd, "exit", len + 1))
-		return (1);
+	init_pipe(vars, tmp->index);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"));
+	else if (pid == 0)
+		child_process(tmp, vars, rdirs, env);
+	else if (pid > 0)
+		parent_process(tmp, vars, pid);
+}
+
+// fonction qui gere le process child, i.e. redirige les fd et execute la cmd
+void	child_process(t_command *tmp, t_pipex vars, t_token **rdirs, char **env)
+{
+	handle_errors_rdirs(tmp, vars, rdirs);
+	//ft_putstr_fd("OK2\n", 2);
+	//printf("index: %d\n", tmp->index);
+	pipe_redirection(vars, rdirs, tmp->index);
+	//ft_putstr_fd("ERROR\n", 2);
+	if (is_builtin(tmp->cmd_args[0]))
+	{
+		//printf("ERROR2\n");
+		exec_builtin(tmp);
+	}
 	else
-		return (0);
+	{
+		//printf("OK3\n");
+		exec_cmd(tmp, env);
+	}
 }
 
-// Fonction qui appelle les fonctions d'execution
-// des builtins
-void	exec_builtin(t_command *tmp)
+// fonction qui gere le process parent et permet de récupérer le code de retour
+// du child process
+void	parent_process(t_command *tmp, t_pipex vars, pid_t pid)
 {
-	int	len;
+	int	status;
+	int	exit_code;
+	int	pid_child;
 
-	len = ft_strlen(tmp->cmd_args[0]);
-	if (!ft_strncmp(tmp->cmd_args[0], "cd", len + 1))
-		built_in_cd(tmp);
-	else if (!ft_strncmp(tmp->cmd_args[0], "pwd", len + 1))
-		built_in_pwd();
-	else if (!ft_strncmp(tmp->cmd_args[0], "exit", len + 1))
-		built_in_exit(tmp);
+	close_previous_pipe(vars, tmp->index);
+	pid_child = waitpid(pid, &status, 0);
+	if (WIFEXITED(status) && tmp->index == vars.nb_cmds - 1)
+	{
+		exit_code = WEXITSTATUS(status);
+		printf("Child pid: %d ; Exit status: %d\n", pid_child, exit_code);
+	}
+	close_rdirs(&(tmp->redirections));
 }
 
-// Commande builtin CD
-// Cas non gere : cd - (qui retourne ds le $OLDPWD)
-// ATTENTION a l'env, PWD et OLDPWD a modifier
-void	built_in_cd(t_command *tmp)
+// fonction qui recupere le path de l'env et le split
+// pour préparer l'execution de la commande
+void	exec_cmd(t_command *tmp, char **env)
 {
-	int		len_tab;
-	char	*error_str;
+	char		*path;
+	char		**paths;
+	char		*cmd_with_path;
 
-	len_tab = get_len_tab(tmp->cmd_args);
-	error_str = ft_strjoin("cd: ", tmp->cmd_args[1]);
-	if (len_tab > 2)
-		ft_putstr_fd("cd: too many arguments\n", 2);
-	else if (chdir(tmp->cmd_args[1]) == -1)
-		perror(error_str);
-	free(error_str);
-}
-
-// Commande builtin PWD
-void	built_in_pwd(void)
-{
-	char	*cwd;
-
-	cwd = malloc(sizeof(char) * (PATH_MAX));
-	if (getcwd(cwd, PATH_MAX) != NULL)
-		ft_printf("%s\n", cwd);
+	//ft_putstr_fd("OK4\n", 2);
+	path = get_path(env);
+	paths = ft_split(path, ':');
+	if (count_slash(tmp->cmd_args[0]) > 0 || path == NULL)
+		cmd_with_path = ft_strdup(tmp->cmd_args[0]);
 	else
-		perror("pwd");
-	free(cwd);
+	{
+		cmd_with_path = get_cmd_with_path(tmp->cmd_args[0], paths);
+		if (cmd_with_path == NULL)
+			cmd_with_path = ft_strdup("");
+	}
+	handle_exec(cmd_with_path, tmp, env);
 }

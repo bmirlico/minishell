@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: clbernar <clbernar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 12:35:20 by clbernar          #+#    #+#             */
-/*   Updated: 2023/07/03 13:56:17 by clbernar         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:21:13 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	check_syntax(char *input)
 // c'est a dire que qu'il y ait bien des caracteres autres que des
 // espaces apres une redirection jusqu'au prochain pipe ou redirection
 // A DOUCLE CHECK LA GESTION DES QUOTES
-// A ENVOYE POUR MODIF A BASTIEN CETTE FONCTION + check_rdir utilise dans le return
+// A ENVOYE POUR MODIF A BASTIEN CETTE FONCTION +
+// check_rdir utilise dans le return
 int	check_empty_redirection(char *input)
 {
 	int	i;
@@ -63,7 +64,6 @@ int	check_empty_redirection(char *input)
 	}
 	return (check_rdir(rdir));
 }
-
 
 // Cette fonction check dans un premier temps les erreurs de syntaxe
 // de pipe du style >< <> <<< >>>

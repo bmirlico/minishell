@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/03 15:34:59 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:11:52 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // Ex. commande : ls > outfile -l -a | wc -l > test | cat
 
 // main du projet minishell
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	char		*input;
 
@@ -28,14 +28,14 @@ int	main(int ac, char **av)
 	while (1)
 	{
 		input = readline("minishell$ ");
-		minishell(input);
+		minishell(input, env);
 		free(input);
 	}
 	return (0);
 }
 
 // fonction minishell qui cree tokenise l'input et cree les listes
-void	minishell(char *input)
+void	minishell(char *input, char **env)
 {
 	t_token		*lst;
 	t_token		*lst_j;
@@ -46,7 +46,8 @@ void	minishell(char *input)
 	cmds = create_list_parser();
 	if (check_syntax(input) == 1)
 	{
-		add_history(input);
+		if (ft_strlen(input) > 0)
+			add_history(input);
 		if (!ft_strncmp(input, "stop", ft_strlen(input) + 1))
 		{
 			free(input);
@@ -56,8 +57,8 @@ void	minishell(char *input)
 		lexer_str(&lst, &lst_j);
 		parser(&lst_j, &cmds);
 		expand(&cmds);
-		display_parser(&cmds);
-		execution(&cmds);
+		//display_parser(&cmds);
+		execution(input, &cmds, env);
 		free_lists(&lst, &lst_j, &cmds);
 	}
 }
