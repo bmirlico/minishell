@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 15:06:14 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/12 16:07:57 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 18:02:54 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,23 @@ char	*get_cmd_with_path(char *cmd, char **paths)
 		i++;
 	}
 	return (NULL);
+}
+
+// fonction qui copie les listes utilisees dans le lexer et parsing/expand
+// pour pouvoir ensuite les free en cas d'exit ds l'execution
+void	copy_lists(t_pipex *vars, t_token **lst, t_token **lst_j,
+			t_command **cmds)
+{
+	vars->copy_lst = lst;
+	vars->copy_lst_j = lst_j;
+	vars->copy_cmds = cmds;
+}
+
+// fonction qui free toutes les listes (lexer_char, lexer_str et parser) +
+// les elements malloc ds la structure t_pipex (tableau de pipes, path et
+// tableau de paths) en cas d'exit dans la fonction d'execution
+void	free_and_exit(t_pipex vars)
+{
+	free_pipex(vars);
+	free_lists(vars.copy_lst, vars.copy_lst_j, vars.copy_cmds);
 }

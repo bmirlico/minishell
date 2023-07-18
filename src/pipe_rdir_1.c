@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 15:47:08 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/18 15:15:08 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 19:59:20 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	pipe_first(t_pipex vars, int i, t_token **rdirs)
 	}
 	if (vars.nb_pipes > 0)
 	{
-		if (close(vars.pipefd[i][1]) < 0 || close(vars.pipefd[i][0] < 0))
+		if (close(vars.pipefd[i][0]) < 0 || close(vars.pipefd[i][1]) < 0)
 			exit(EXIT_FAILURE);
 	}
 	close_rdirs(rdirs);
@@ -76,7 +76,7 @@ void	pipe_last(t_pipex vars, int i, t_token **rdirs)
 		if (dup2(last_outfile->fd, STDOUT_FILENO) < 0)
 			exit(EXIT_FAILURE);
 	}
-	if (close(vars.pipefd[i - 1][1]) < 0)
+	if (close(vars.pipefd[i - 1][1]) < 0 || close(vars.pipefd[i - 1][0]) < 0)
 		exit(EXIT_FAILURE);
 	close_rdirs(rdirs);
 }

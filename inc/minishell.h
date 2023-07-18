@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/18 15:35:50 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 18:05:03 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,15 @@ typedef struct s_command {
 }	t_command;
 
 typedef struct s_pipex {
+	char					*path;
+	char					**paths;
 	int						nb_pipes;
 	int						nb_cmds;
 	pid_t					**pipefd;
+	char					**t_env;
+	t_token					**copy_lst;
+	t_token					**copy_lst_j;
+	t_command				**copy_cmds;
 }	t_pipex;
 
 /* 0) MAIN */
@@ -257,32 +263,28 @@ void			remove_quotes_tab(char **tab);
 
 void			quote_removing_tab(char **tab, int index, int quotes);
 
-/* 4) [WIP] EXECUTION i.e execution des commandes */
+/* 4) EXECUTION i.e execution des commandes */
 
 // exec_1.c @Bastien
 
-void			execution(char *input, t_command **cmds, char **env);
+void			execution(char *input, t_command **cmds, char **env,
+					t_pipex vars);
 
-void			pipex(t_command *tmp, t_pipex vars, t_token **rdirs,
-					char **env);
+void			pipex(t_command *tmp, t_pipex vars, t_token **rdirs);
 
-void			child_process(t_command *tmp, t_pipex vars, t_token **rdirs,
-					char **env);
+void			child_process(t_command *tmp, t_pipex vars, t_token **rdirs);
 
 void			parent_process(t_command *tmp, t_pipex vars, pid_t pid);
 
-void			exec_cmd(t_command *tmp, char **env);
+void			exec_cmd(t_command *tmp, t_pipex vars);
 
 // exec_2.c @Bastien
 
-void			handle_exec(char *cmd_p, t_command *tmp, char **env);
+void			handle_exec(char *cmd_p, t_command *tmp, t_pipex vars);
 
-void			if_file_unexists(char *cmd_p, char *error, t_command *tmp,
-					char **env);
+void			if_file_unexists(char *cmd_p, t_command *tmp, t_pipex vars);
 
-void			if_file_exists(char *cmd_p, char *error, t_command *tmp,
-					char **env);
-
+void			if_file_exists(char *cmd_p, t_command *tmp, t_pipex vars);
 
 // pipe_.c @Bastien
 
@@ -321,7 +323,6 @@ t_token			*get_last_infile(t_token **rdirs);
 
 t_token			*get_last_outfile(t_token **rdirs);
 
-
 // rdirs_.c @Bastien
 
 void			open_rdirs(t_token **redirections);
@@ -337,7 +338,8 @@ void			fill_heredoc(t_token *tmp);
 
 // utils_exec_1.c @Bastien
 
-void			init_struct(t_pipex *vars, t_command **cmds, char *input);
+void			init_struct(t_pipex *vars, t_command **cmds, char *input,
+					char **env);
 
 void			get_index_cmds(t_command **cmds);
 
@@ -354,6 +356,17 @@ char			*get_path(char **env);
 int				is_path_set(char **env);
 
 char			*get_cmd_with_path(char *cmd, char **paths);
+
+void			copy_lists(t_pipex *vars, t_token **lst, t_token **lst_j,
+					t_command **cmds);
+
+void			free_and_exit(t_pipex vars);
+
+// utils_exec_3.c @Bastien
+
+void			free_pipex(t_pipex vars);
+
+void			free_tab(char **tab);
 
 /* 5) [WIP] BUILT-INS et des builtins */
 // echo, cd, pwd, export, unset, env, exit

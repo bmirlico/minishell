@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 15:42:19 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/17 23:40:25 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 17:53:44 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	close_pipe_and_free(t_pipex vars, int index)
 {
 	if (index < vars.nb_pipes)
 		close_pipe(vars, index);
-	free_pipefd(vars.pipefd, vars.nb_pipes);
+	free_and_exit(vars);
 	exit(EXIT_FAILURE);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/17 19:11:52 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 17:16:28 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	minishell(char *input, char **env)
 	t_token		*lst;
 	t_token		*lst_j;
 	t_command	*cmds;
+	t_pipex		vars;
 
 	lst = create_list_lexer();
 	lst_j = create_list_lexer();
@@ -58,7 +59,8 @@ void	minishell(char *input, char **env)
 		parser(&lst_j, &cmds);
 		expand(&cmds);
 		//display_parser(&cmds);
-		execution(input, &cmds, env);
+		copy_lists(&vars, &lst, &lst_j, &cmds);
+		execution(input, &cmds, env, vars);
 		free_lists(&lst, &lst_j, &cmds);
 	}
 }

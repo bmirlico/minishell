@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 15:48:30 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/12 15:13:34 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/18 17:59:52 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 // fonction qui initialise la structure t_pipex qui va contenir 
 // les vars nb_pipes et le tableau de pipes pour l'execution des commandes
-void	init_struct(t_pipex *vars, t_command **cmds, char *input)
+void	init_struct(t_pipex *vars, t_command **cmds, char *input, char **env)
 {
 	get_index_cmds(cmds);
+	vars->path = get_path(env);
+	vars->paths = ft_split(vars->path, ':');
 	vars->nb_pipes = get_nb_pipes(input);
 	vars->nb_cmds = vars->nb_pipes + 1;
 	vars->pipefd = init_pipefd(vars->nb_pipes);
+	vars->t_env = env;
 }
 
 // fonction qui index les éléments de la liste chainée t_command

@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/07/12 15:20:47 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/07/18 18:04:13 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRCS = 			$(SRC_DIR)/main.c \
 				$(SRC_DIR)/rdirs.c \
 				$(SRC_DIR)/utils_exec_1.c \
 				$(SRC_DIR)/utils_exec_2.c \
+				$(SRC_DIR)/utils_exec_3.c \
 				$(SRC_DIR)/builtin_1.c \
 				$(SRC_DIR)/builtin_2.c \
 				$(SRC_DIR)/builtin_3.c \
