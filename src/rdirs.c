@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 15:42:19 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/18 17:53:44 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/19 16:57:58 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	handle_errors_rdirs(t_command *tmpc, t_pipex vars, t_token **rdirs)
 		{
 			perror(tmp->str);
 			close_rdirs(rdirs);
+			if (vars.nb_pipes > 0)
+				close_previous_pipe(vars, tmpc->index);
 			close_pipe_and_free(vars, tmpc->index);
 		}
 		tmp = tmp->next;

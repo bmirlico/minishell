@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/18 18:05:03 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/19 20:23:03 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int				count_slash(char *str);
 
 void			lexer_str(t_token **lst, t_token **lst_j);
 
-void			group_quotes(t_token **tmp, t_token **lst_j, char *join);
+void			group_quotes(t_token **tmp, char **join);
 
 void			group_str(t_token **tmp, t_token **lst_j, char *join);
 

@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:25:42 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/18 17:16:28 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/19 19:30:36 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	minishell(char *input, char **env)
 	lst = create_list_lexer();
 	lst_j = create_list_lexer();
 	cmds = create_list_parser();
+	(void)env;
 	if (check_syntax(input) == 1)
 	{
 		if (ft_strlen(input) > 0)
@@ -57,10 +58,10 @@ void	minishell(char *input, char **env)
 		lexer_char(&lst, input);
 		lexer_str(&lst, &lst_j);
 		parser(&lst_j, &cmds);
-		expand(&cmds);
-		//display_parser(&cmds);
+		//expand(&cmds);
+		display_parser(&cmds);
 		copy_lists(&vars, &lst, &lst_j, &cmds);
-		execution(input, &cmds, env, vars);
+		//execution(input, &cmds, env, vars);
 		free_lists(&lst, &lst_j, &cmds);
 	}
 }
