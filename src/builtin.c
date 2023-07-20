@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_1.c                                        :+:      :+:    :+:   */
+/*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/21 12:06:57 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/11 12:33:14 by bmirlico         ###   ########.fr       */
+/*   Created: 2023/07/20 12:46:59 by bmirlico          #+#    #+#             */
+/*   Updated: 2023/07/20 12:47:02 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,34 +42,4 @@ void	exec_builtin(t_command *tmp)
 		built_in_pwd();
 	else if (!ft_strncmp(tmp->cmd_args[0], "exit", len + 1))
 		built_in_exit(tmp);
-}
-
-// Commande builtin CD
-// Cas non gere : cd - (qui retourne ds le $OLDPWD)
-// ATTENTION a l'env, PWD et OLDPWD a modifier
-void	built_in_cd(t_command *tmp)
-{
-	int		len_tab;
-	char	*error_str;
-
-	len_tab = get_len_tab(tmp->cmd_args);
-	error_str = ft_strjoin("cd: ", tmp->cmd_args[1]);
-	if (len_tab > 2)
-		ft_putstr_fd("cd: too many arguments\n", 2);
-	else if (chdir(tmp->cmd_args[1]) == -1)
-		perror(error_str);
-	free(error_str);
-}
-
-// Commande builtin PWD
-void	built_in_pwd(void)
-{
-	char	*cwd;
-
-	cwd = malloc(sizeof(char) * (PATH_MAX));
-	if (getcwd(cwd, PATH_MAX) != NULL)
-		ft_printf("%s\n", cwd);
-	else
-		perror("pwd");
-	free(cwd);
 }

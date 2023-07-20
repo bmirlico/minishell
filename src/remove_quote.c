@@ -6,7 +6,7 @@
 /*   By: clbernar <clbernar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:05:59 by clbernar          #+#    #+#             */
-/*   Updated: 2023/06/30 16:22:43 by clbernar         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:55:11 by clbernar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,10 @@ void	remove_quotes_tab(char **tab)
 	i = 0;
 	quotes = 0;
 	if (tab == NULL)
+		return ;
+	// RAJOUTE
+	if (ft_strlen(tab[0]) != 0
+		&& ft_strncmp(tab[0], "echo", ft_strlen(tab[0])) == 0)
 		return ;
 	while (tab[i])
 	{

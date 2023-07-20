@@ -6,7 +6,7 @@
 /*   By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:24:06 by bmirlico          #+#    #+#             */
-/*   Updated: 2023/07/19 20:23:03 by bmirlico         ###   ########.fr       */
+/*   Updated: 2023/07/20 12:49:15 by bmirlico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ typedef enum s_token_type {
 	T_EOF, // 11
 }	t_token_type;
 
+typedef struct s_env {
+	char			*var_name;
+	char			*var_value;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_token {
 	t_token_type	type;
 	char			value;
@@ -68,7 +74,8 @@ typedef struct s_pipex {
 	int						nb_pipes;
 	int						nb_cmds;
 	pid_t					**pipefd;
-	char					**t_env;
+	t_env					*copy_t_env;
+	char					**copy_env_tmp; // env_tmp
 	t_token					**copy_lst;
 	t_token					**copy_lst_j;
 	t_command				**copy_cmds;
@@ -219,17 +226,19 @@ int				to_be_modified(char *str);
 
 int				nb_quotes(char *str);
 
-void			new_str(char *str, char *new);
+void			new_str(t_env *env, char *str, char *new);
 
-int				var_env_copy(char *str, int index, char *new, int dest);
+int				var_env_copy(t_env *env, char *str, char *new, int dest);
+
+char			*get_env(t_env *env, char *name);
 
 // get_expand_info @Clement
 
 int				get_varname_len(char *str);
 
-int				get_varenv_value_len(char *str);
+int				get_varenv_value_len(t_env *env, char *str);
 
-int				get_varenv_len(char *str, int i);
+int				get_varenv_len(t_env *env, char *str, int i);
 
 int				get_var_env_end(char *str, int i);
 
@@ -243,15 +252,15 @@ char			**replace_tab(char **tab, int new_len);
 
 // expand.c @Clement
 
-void			expand(t_command **cmds);
+void			expand(t_env *env, t_command **cmds);
 
-void			expand_tab(char **tab);
+void			expand_tab(t_env *env, char **tab);
 
-void			expand_str_tab(char **tab, int i);
+void			expand_str_tab(t_env *env, char **tab, int i);
 
-void			expand_rdir(t_token	*redirections);
+void			expand_rdir(t_env *env, t_token	*redirections);
 
-void			expand_rdir_lst(t_token *rdir);
+void			expand_rdir_lst(t_env *env, t_token *rdir);
 
 // remove_quote.c @Clement
 
@@ -264,6 +273,32 @@ void			remove_quotes_tab(char **tab);
 void			quote_removing_tab(char **tab, int index, int quotes);
 
 /* 4) EXECUTION i.e execution des commandes */
+
+// 4.1. Dupliquer l'environnement
+
+// dup_env.c @Clement
+
+void			dup_env(char **envp, t_env **env);
+
+void			fill_t_env(t_env *new, char *str);
+
+void			display_env(t_env *env);
+
+char			**create_env_tab(t_env *env);
+
+void			display_tab(char **tab);
+
+// lst_env_utils.c @Clement
+
+int				lst_env_size(t_env *env);
+
+void			free_envlst(t_env **env);
+
+void			add_back_to_env(t_env **env, t_env *new);
+
+void			new_return_value(t_env *env, char *return_value);
+
+// 4.2. Execution
 
 // exec_1.c @Bastien
 
@@ -368,20 +403,24 @@ void			free_pipex(t_pipex vars);
 
 void			free_tab(char **tab);
 
-/* 5) [WIP] BUILT-INS et des builtins */
+/* 5) BUILT-INS et des builtins */
 // echo, cd, pwd, export, unset, env, exit
 
-// builtin_1.c @Bastien
+// builtin.c @Bastien
 
 int				is_builtin(char *cmd);
 
 void			exec_builtin(t_command *tmp);
 
+// cd.c @Bastien
+
 void			built_in_cd(t_command *tmp);
+
+// pwd.c @Bastien
 
 void			built_in_pwd(void);
 
-// builtin_2.c @Bastien
+// exit_1.c @Bastien
 
 void			built_in_exit(t_command *tmp);
 
@@ -394,7 +433,7 @@ void			exit_non_numeric(char **error, char *str);
 
 int				is_out_of_range(long long exit_code, char *str);
 
-// builtin_3.c @Bastien
+// exit_2.c @Bastien
 
 long long		ft_strtoll(const char *nptr);
 
@@ -403,5 +442,59 @@ void			init_strtoll(int *i, int *sign, long long *res, int *digit);
 void			check_sign(char c, int *i, int *sign);
 
 void			handle_bounds(int *sign, long long *res);
+
+// env.c @Clement
+
+void			built_in_env(t_command *cmd, char **env_tab, t_env *env);
+
+// unset.c @Clement
+
+void			built_in_unset(t_command *cmd, t_env *env);
+
+void			unset(t_env *env, char *name);
+
+void			delete_first(t_env *env);
+
+// export.c @Clement
+
+void			built_in_export(t_command *cmd, t_env *env);
+
+int				affectation_is_complete(char *str);
+
+void			export(t_env *env, char *declaration);
+
+int				check_valid_identifier(t_env *env, char *str);
+
+void			swap_value(t_env *env, char *declaration);
+
+// export_display.c @Clement
+
+void			display_export(t_env *env);
+
+void			display_not_a_valid_identifier(char *str, t_env *env);
+
+int				already_exist(t_env *env, char *declaration);
+
+// echo.c @Clement
+
+void			built_in_echo(t_command *cmd, t_env *env);
+
+void			echo(t_command *cmd, t_env *env);
+
+int				no_expand_needed(char *str, t_env *env);
+
+int				is_option_n(char *str);
+
+// echo_special_case.c @Clement
+
+void			print_echo(t_env *env, char *str);
+
+int				print_echo_special(t_env *env, char *str);
+
+void			print_varenv_no_space(char *str);
+
+int				check_var_env(char *var);
+
+int				is_special_var_env(char *str, int i, t_env *env);
 
 #endif

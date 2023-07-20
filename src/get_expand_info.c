@@ -6,7 +6,7 @@
 /*   By: clbernar <clbernar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:11:47 by clbernar          #+#    #+#             */
-/*   Updated: 2023/06/30 16:24:20 by clbernar         ###   ########.fr       */
+/*   Updated: 2023/07/10 18:15:07 by clbernar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	get_nb_empty(char **tab)
 
 // this function return the len of the var_env value that will be added
 // to the new string
-int	get_varenv_value_len(char *str)
+int	get_varenv_value_len(t_env *env, char *str)
 {
 	int	i;
 	int	nb;
@@ -51,7 +51,7 @@ int	get_varenv_value_len(char *str)
 		quote_state = quotes_state(str[i], quote_state);
 		var_env = var_env_state(str, i, var_env, quote_state);
 		if (var_env == SINGLE_OPEN && prev_state == CLOSED)
-			nb += get_varenv_len(str, i);
+			nb += get_varenv_len(env, str, i);
 		if (var_env == CLOSED && prev_state == SINGLE_OPEN && str[i] == '$')
 			i--;
 		i++;
@@ -73,7 +73,7 @@ int	get_var_env_end(char *str, int i)
 
 // Didn't do the ? case A RAJOUTER
 // this function return the len of the var_env name in the old string
-int	get_varenv_len(char *str, int i)
+int	get_varenv_len(t_env *env, char *str, int i)
 {
 	int		start;
 	int		len;
@@ -92,7 +92,7 @@ int	get_varenv_len(char *str, int i)
 	if (len != 0)
 	{
 		tmp = ft_substr(str, start, len);
-		nb = ft_strlen(getenv(tmp));
+		nb = ft_strlen(get_env(env, tmp));
 	}
 	if (tmp != NULL)
 		free(tmp);

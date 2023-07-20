@@ -6,7 +6,7 @@
 #    By: bmirlico <bmirlico@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/27 18:44:26 by bmirlico          #+#    #+#              #
-#    Updated: 2023/07/18 18:04:13 by bmirlico         ###   ########.fr        #
+#    Updated: 2023/07/20 12:51:48 by bmirlico         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,8 @@ SRCS = 			$(SRC_DIR)/main.c \
 				$(SRC_DIR)/expand.c \
 				$(SRC_DIR)/clean_post_expand.c \
 				$(SRC_DIR)/remove_quote.c \
+				$(SRC_DIR)/dup_env.c\
+				$(SRC_DIR)/lst_env_utils.c\
 				$(SRC_DIR)/exec_1.c \
 				$(SRC_DIR)/exec_2.c \
 				$(SRC_DIR)/pipe.c \
@@ -52,9 +54,15 @@ SRCS = 			$(SRC_DIR)/main.c \
 				$(SRC_DIR)/utils_exec_1.c \
 				$(SRC_DIR)/utils_exec_2.c \
 				$(SRC_DIR)/utils_exec_3.c \
-				$(SRC_DIR)/builtin_1.c \
-				$(SRC_DIR)/builtin_2.c \
-				$(SRC_DIR)/builtin_3.c \
+				$(SRC_DIR)/builtin.c \
+				$(SRC_DIR)/cd.c \
+				$(SRC_DIR)/pwd.c \
+				$(SRC_DIR)/env.c \
+				$(SRC_DIR)/unset.c \
+				$(SRC_DIR)/export.c \
+				$(SRC_DIR)/export_display.c \
+				$(SRC_DIR)/echo.c \
+				$(SRC_DIR)/echo_special_case.c
 
 LIBFTDIR = 		./libft
 
